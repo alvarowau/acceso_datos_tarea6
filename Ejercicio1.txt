@@ -1,0 +1,275 @@
+EJERCICIO 1: XPATH (universidad.xml)
+Resultados de las consultas en BaseX:
+
+--------------------------------------------------------------------------------
+1.  Nombre de la Universidad.
+--------------------------------------------------------------------------------
+Pregunta 1: Nombre de la Universidad.
+XPath 1: /universidad/nombre/text()
+Resultado 1:
+Universidad de Victoria
+
+--------------------------------------------------------------------------------
+2.  País de la Universidad.
+--------------------------------------------------------------------------------
+Pregunta 2: País de la Universidad.
+XPath 2: /universidad/pais/text()
+Resultado 2:
+España
+
+--------------------------------------------------------------------------------
+3.  Nombres de las Carreras.
+--------------------------------------------------------------------------------
+Pregunta 3: Nombres de las Carreras.
+XPath 3: /universidad/carreras/carrera/nombre/text()
+Resultado 3:
+I.T. Informática
+Dipl. Empresariales
+Dipl. Relaciones Laborales
+Lic. Quimica
+Lic. Biología
+Lic. Humanidades
+
+--------------------------------------------------------------------------------
+4.  Años de plan de estudio de las carreras.
+--------------------------------------------------------------------------------
+Pregunta 4: Años de plan de estudio de las carreras.
+XPath 4: /universidad/carreras/carrera/plan/text()
+Resultado 4:
+2003
+2001
+2001
+2003
+2001
+1980
+
+--------------------------------------------------------------------------------
+5.  Nombres de todos los alumnos.
+--------------------------------------------------------------------------------
+Pregunta 5: Nombres de todos los alumnos.
+XPath 5: /universidad/alumnos/alumno/nombre/text()
+Resultado 5:
+Víctor Manuel
+Luisa
+Fernando
+María
+
+--------------------------------------------------------------------------------
+6.  Identificadores de todas las carreras.
+--------------------------------------------------------------------------------
+Pregunta 6: Identificadores de todas las carreras.
+XPath 6: /universidad/carreras/carrera/@id
+Resultado 6:
+c01
+c02
+c03
+c04
+c05
+c06
+
+--------------------------------------------------------------------------------
+7.  Datos de la carrera cuyo id es c1.
+--------------------------------------------------------------------------------
+Pregunta 7: Datos de la carrera cuyo id es c1. (Asumiendo que quisiste decir 'c01')
+XPath 7: /universidad/carreras/carrera[@id='c01']
+Resultado 7:
+<carrera id="c01">
+  <nombre>I.T. Informática</nombre>
+  <plan>2003</plan>
+  <creditos>250</creditos>
+  <centro>Escuela de Informática</centro>
+</carrera>
+
+--------------------------------------------------------------------------------
+8.  Centro en que se estudia la carrera cuyo id es c0.
+--------------------------------------------------------------------------------
+Pregunta 8: Centro en que se estudia la carrera cuyo id es c0. (Asumiendo que quisiste decir 'c01')
+XPath 8: /universidad/carreras/carrera[@id='c01']/centro/text()
+Resultado 8:
+Escuela de Informática
+
+--------------------------------------------------------------------------------
+9.  Nombre de las carreras que tengan subdirector.
+--------------------------------------------------------------------------------
+Pregunta 9: Nombre de las carreras que tengan subdirector.
+XPath 9: /universidad/carreras/carrera[subdirector]/nombre/text()
+Resultado 9:
+Dipl. Relaciones Laborales
+
+--------------------------------------------------------------------------------
+10. Nombre de los alumnos que no estén haciendo proyecto.
+--------------------------------------------------------------------------------
+Pregunta 10: Nombre de los alumnos que no estén haciendo proyecto.
+XPath 10: /universidad/alumnos/alumno[not(estudios/proyecto)]/nombre/text()
+Resultado 10:
+Víctor Manuel
+Fernando
+
+--------------------------------------------------------------------------------
+11. Códigos de las carreras en las que hay algún alumno matriculado.
+--------------------------------------------------------------------------------
+Pregunta 11: Códigos de las carreras en las que hay algún alumno matriculado.
+XPath 11: distinct-values(/universidad/alumnos/alumno/estudios/carrera/@codigo)
+Resultado 11:
+c01
+c02
+
+--------------------------------------------------------------------------------
+12. Apellidos y Nombre de los alumnos con beca.
+--------------------------------------------------------------------------------
+Pregunta 12: Apellidos y Nombre de los alumnos con beca.
+XPath 12: /universidad/alumnos/alumno[@beca='si']/concat(apellido1/text(), ' ', apellido2/text(), ', ', nombre/text())
+Resultado 12:
+Pérez Romero, Fernando
+
+--------------------------------------------------------------------------------
+13. Nombre de las asignaturas de la titulación c04.
+--------------------------------------------------------------------------------
+Pregunta 13: Nombre de las asignaturas de la titulación c04.
+XPath 13: /universidad/asignaturas/asignatura[@titulacion='c04']/nombre/text()
+Resultado 13:
+Pedagogía
+Tecnología de los Alimentos
+
+--------------------------------------------------------------------------------
+14. Nombre de las asignaturas de segundo trimestre.
+--------------------------------------------------------------------------------
+Pregunta 14: Nombre de las asignaturas de segundo trimestre.
+XPath 14: /universidad/asignaturas/asignatura[trimestre='2']/nombre/text()
+Resultado 14:
+Ingeniería del Software
+Pedagogía
+Didáctica
+Tecnología de los Alimentos
+Historia del Pensamiento
+
+--------------------------------------------------------------------------------
+15. Nombre de las asignaturas que no tienen 4 créditos teóricos.
+--------------------------------------------------------------------------------
+Pregunta 15: Nombre de las asignaturas que no tienen 4 créditos teóricos.
+XPath 15: /universidad/asignaturas/asignatura[number(creditos_teoricos) != 4]/nombre/text()
+Resultado 15:
+Ofimática
+Ingeniería del Software
+Tecnología de los Alimentos
+Bases de Datos
+Historia del Pensamiento
+
+--------------------------------------------------------------------------------
+16. Código de la carrera que estudia el último alumno.
+--------------------------------------------------------------------------------
+Pregunta 16: Código de la carrera que estudia el último alumno.
+XPath 16: /universidad/alumnos/alumno[last()]/estudios/carrera/@codigo
+Resultado 16:
+c01
+
+--------------------------------------------------------------------------------
+17. Código de las asignaturas que estudian mujeres.
+--------------------------------------------------------------------------------
+Pregunta 17: Código de las asignaturas que estudian mujeres. (No se puede determinar con el XML proporcionado - se muestra alternativa)
+XPath 17: distinct-values(/universidad/alumnos/alumno/estudios/asignaturas/asignatura/@codigo) (Alternativa: código de asignaturas estudiadas por *algún* alumno)
+Resultado 17 (Alternativo):
+a01
+a02
+a03
+a04
+a05
+a07
+a09
+
+--------------------------------------------------------------------------------
+18. Nombre de los alumnos que matriculados en la asignatura a02.
+--------------------------------------------------------------------------------
+Pregunta 18: Nombre de los alumnos que matriculados en la asignatura a02.
+XPath 18: /universidad/alumnos/alumno/estudios/asignaturas[asignatura/@codigo='a02']/../../nombre/text()
+Resultado 18:
+Luisa
+Fernando
+María
+
+--------------------------------------------------------------------------------
+19. Códigos de las carreras que estudian los alumnos matriculados en alguna asignatura.
+--------------------------------------------------------------------------------
+Pregunta 19: Códigos de las carreras que estudian los alumnos matriculados en alguna asignatura.
+XPath 19: distinct-values(/universidad/alumnos/alumno/estudios/carrera/@codigo)
+Resultado 19:
+c01
+c02
+
+--------------------------------------------------------------------------------
+20. Apellidos de todos los alumnos mayores de 20.
+--------------------------------------------------------------------------------
+Pregunta 20: Apellidos de todos los alumnos mayores de 20.
+XPath 20: /universidad/alumnos/alumno[edad > 20]/concat(apellido1/text(), ' ', apellido2/text())
+Resultado 20:
+Pérez García
+Pérez Romero
+
+--------------------------------------------------------------------------------
+21. Nombre de la carrera que estudia Víctor Manuel.
+--------------------------------------------------------------------------------
+Pregunta 21: Nombre de la carrera que estudia Víctor Manuel.
+XPath 21: for $code in /universidad/alumnos/alumno[nombre='Víctor Manuel']/estudios/carrera/@codigo return /universidad/carreras/carrera[@id=$code]/nombre/text()
+Resultado 21:
+I.T. Informática
+
+--------------------------------------------------------------------------------
+22. Nombre de las asignaturas que estudia Luisa.
+--------------------------------------------------------------------------------
+Pregunta 22: Nombre de las asignaturas que estudia Luisa.
+string-join(
+  for $asignatura_codigo in /universidad/alumnos/alumno[nombre='Luisa']/estudios/asignaturas/asignatura/@codigo
+  return /universidad/asignaturas/asignatura[@id=$asignatura_codigo]/nombre/text()
+  , ', ')
+Resultado 22:
+Ingeniería del Software
+Ofimática
+
+--------------------------------------------------------------------------------
+23. Primer apellido de los alumnos matriculados en Ingeniería del Software.
+--------------------------------------------------------------------------------
+Pregunta 23: Primer apellido de los alumnos matriculados en Ingeniería del Software.
+XPath 23: /universidad/alumnos/alumno/estudios/asignaturas[asignatura/@codigo='a02']/../../apellido1/text()
+Resultado 23:
+Pérez
+Avalón
+
+--------------------------------------------------------------------------------
+24. Nombre de las carreras que estudian los alumnos matriculados en la asignatura Tecnología de los Alimentos.
+--------------------------------------------------------------------------------
+Pregunta 24: Nombre de las carreras que estudian los alumnos matriculados en la asignatura Tecnología de los Alimentos.
+XPath 24: for $alumno in /universidad/alumnos/alumno/estudios/asignaturas[asignatura/@codigo='a07']/../../estudios/carrera/@codigo return /universidad/carreras/carrera[@id=$alumno]/nombre/text()
+Resultado 24:
+I.T. Informática
+
+--------------------------------------------------------------------------------
+25. Nombre de los alumnos matriculados en carreras que no tienen subdirector.
+--------------------------------------------------------------------------------
+Pregunta 25: Nombre de los alumnos matriculados en carreras que no tienen subdirector.
+XPath 25: /universidad/alumnos/alumno[estudios/carrera/@codigo = /universidad/carreras/carrera[not(subdirector)]/@id]/nombre/text()
+Resultado 25:
+Fernando
+Luisa
+María
+Víctor Manuel
+
+--------------------------------------------------------------------------------
+26. Nombre de los alumnos matriculados en asignaturas con 0 créditos prácticos o que estudien la carrera de I.T. Informática.
+--------------------------------------------------------------------------------
+Pregunta 26: Nombre de los alumnos matriculados en asignaturas con 0 créditos prácticos o que estudien la carrera de I.T. Informática.
+XPath 26: /universidad/alumnos/alumno[estudios/asignaturas/asignatura/@codigo = /universidad/asignaturas/asignatura[creditos_practicos='0']/@id or estudios/carrera/@codigo = 'c01']/nombre/text()
+Resultado 26:
+Víctor Manuel
+Fernando
+María
+
+--------------------------------------------------------------------------------
+27. Nombre de los alumnos que estudian carreras cuyos planes son anteriores a 2002.
+--------------------------------------------------------------------------------
+Pregunta 27: Nombre de los alumnos que estudian carreras cuyos planes son anteriores a 2002.
+XPath 27: /universidad/alumnos/alumno[estudios/carrera/@codigo = /universidad/carreras/carrera[number(plan) < 2002]/@id]/nombre/text()
+Resultado 27:
+Fernando
+Luisa
+
+--------------------------------------------------------------------------------

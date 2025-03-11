@@ -1,0 +1,136 @@
+EJERCICIO 2: XQUERY (libros.xml y librosalmacen.xml)
+Resultados de las consultas en BaseX:
+
+--------------------------------------------------------------------------------
+1.  Listar el título de todos los libros.
+--------------------------------------------------------------------------------
+Pregunta 1: Listar el título de todos los libros.
+XQuery 1: //titulo/text()
+Resultado 1:
+TCP/IP Illustrated
+Advan Programming for Unix environment
+Data on the Web
+Economics of Technology for Digital TV
+
+--------------------------------------------------------------------------------
+2.  Listar año y título de todos los libros, ordenados por el año.
+--------------------------------------------------------------------------------
+Pregunta 2: Listar año y título de todos los libros, ordenados por el año.
+XQuery 2: for $libro in //libro order by $libro/@año return <libro>{$libro/@año} {$libro/titulo/text()}</libro>
+Resultado 2:
+<libro>1992 Advan Programming for Unix environment</libro>
+<libro>1994 TCP/IP Illustrated</libro>
+<libro>1999  Economics of Technology for Digital TV</libro>
+<libro>2000 Data on the Web</libro>
+
+--------------------------------------------------------------------------------
+3.  Listar los libros cuyo precio sea 65.95
+--------------------------------------------------------------------------------
+Pregunta 3: Listar los libros cuyo precio sea 65.95
+XQuery 3: //libro[precio = 65.95]/titulo/text()
+Resultado 3:
+TCP/IP Illustrated
+Advan Programming for Unix environment
+
+--------------------------------------------------------------------------------
+4.  Listar los libros publicados antes del año 2000
+--------------------------------------------------------------------------------
+Pregunta 4: Listar los libros publicados antes del año 2000
+XQuery 4: //libro[@año < 2000]/titulo/text()
+Resultado 4:
+TCP/IP Illustrated
+Advan Programming for Unix environment
+Economics of Technology for Digital TV
+
+--------------------------------------------------------------------------------
+5.  Listar año y título de los libros publicados por Addison-Wesley después del año 1992.
+--------------------------------------------------------------------------------
+Pregunta 5: Listar año y título de los libros publicados por Addison-Wesley después del año 1992.
+XQuery 5: //libro[editorial = 'Addison-Wesley' and @año > 1992]/titulo/text()
+Resultado 5:
+<libro>1994 TCP/IP Illustrated</libro>
+
+--------------------------------------------------------------------------------
+6.  Listar año y título de los libros que tienen más de un autor.
+--------------------------------------------------------------------------------
+Pregunta 6: Listar año y título de los libros que tienen más de un autor.
+XQuery 6: //libro[count(autor) > 1]/titulo/text()
+Resultado 6:
+<libro>2000 Data on the Web</libro>
+
+--------------------------------------------------------------------------------
+7.  Listar año y título de los libros que tienen no tienen autor.
+--------------------------------------------------------------------------------
+Pregunta 7: Listar año y título de los libros que tienen no tienen autor.
+XQuery 7: //libro[not(autor)]/titulo/text()
+Resultado 7:
+<libro>1999  Economics of Technology for Digital TV</libro>
+
+--------------------------------------------------------------------------------
+8.  Mostrar los apellidos de los autores que aparecen en el documento, sin repeticiones, ordenados alfabéticamente.
+--------------------------------------------------------------------------------
+Pregunta 8: Mostrar los apellidos de los autores que aparecen en el documento, sin repeticiones, ordenados alfabéticamente.
+XQuery 8: for $apellido in distinct-values(//autor/apellido) order by $apellido return $apellido
+Resultado 8:
+Abiteboul
+Buneman
+Stevens
+Suciu
+
+--------------------------------------------------------------------------------
+9.  Por cada libro, listar agrupado en un elemento su título y autores.
+--------------------------------------------------------------------------------
+Pregunta 9: Por cada libro, listar agrupado en un elemento su título y autores.
+XQuery 9: for $libro in //libro return <libro_autores>{$libro/titulo} {for $autor in $libro/autor return <autor>{$autor/nombre/text()} {$autor/apellido/text()}</autor>}</libro_autores>
+Resultado 9:
+<libro_autores><titulo>TCP/IP Illustrated</titulo><autor><nombre>W.</nombre><apellido>Stevens</apellido></autor></libro_autores>
+<libro_autores><titulo>Advan Programming for Unix environment</titulo><autor><nombre>W.</nombre><apellido>Stevens</apellido></autor></libro_autores>
+<libro_autores><titulo>Data on the Web</titulo><autor><nombre>Serge</nombre><apellido>Abiteboul</apellido></autor><autor><nombre>Peter</nombre><apellido>Buneman</apellido></autor><autor><nombre>Dan</nombre><apellido>Suciu</apellido></autor></libro_autores>
+<libro_autores><titulo> Economics of Technology for Digital TV</titulo></libro_autores>
+
+--------------------------------------------------------------------------------
+10. Por cada libro, obtener su título y el número de autores, agrupados en un elemento.
+--------------------------------------------------------------------------------
+Pregunta 10: Por cada libro, obtener su título y el número de autores, agrupados en un elemento.
+XQuery 10: for $libro in //libro return <libro_autores_count>{$libro/titulo} <num_autores>{count($libro/autor)}</num_autores></libro_autores_count>
+Resultado 10:
+<libro_autores_count><titulo>TCP/IP Illustrated</titulo><num_autores>1</num_autores></libro_autores_count>
+<libro_autores_count><titulo>Advan Programming for Unix environment</titulo><num_autores>1</num_autores></libro_autores_count>
+<libro_autores_count><titulo>Data on the Web</titulo><num_autores>3</num_autores></libro_autores_count>
+<libro_autores_count><titulo> Economics of Technology for Digital TV</titulo><num_autores>0</num_autores></libro_autores_count>
+
+--------------------------------------------------------------------------------
+11. Una lista ordenada alfabéticamente de categorías de libros comprados.
+--------------------------------------------------------------------------------
+Pregunta 11: Una lista ordenada alfabéticamente de categorías de libros comprados.
+XQuery 11: for $cat in distinct-values(//almacen/*) order by local-name($cat) return local-name($cat)
+Resultado 11:
+comprados
+pendientes
+
+--------------------------------------------------------------------------------
+12. Obtener la suma del importe de todos los libros que están pendientes.
+--------------------------------------------------------------------------------
+Pregunta 12: Obtener la suma del importe de todos los libros que están pendientes.
+XQuery 12: let $pendientes_codes := //almacen/pendientes/codigo let $libros_doc := doc("libros.xml")/bib return sum(for $codigo in $pendientes_codes let $libro := $libros_doc/libro[position() = $codigo] return $libro/precio)
+Resultado 12:
+169.9
+
+--------------------------------------------------------------------------------
+13. Una lista ordenada de autores que tengan libros pendientes.
+--------------------------------------------------------------------------------
+Pregunta 13: Una lista ordenada de autores que tengan libros pendientes.
+XQuery 13: let $pendientes_codes := //almacen/pendientes/codigo let $libros_doc := doc("libros.xml")/bib for $codigo in $pendientes_codes let $libro := $libros_doc/libro[position() = $codigo] for $autor in $libro/autor order by $autor/apellido return <autor>{$autor/nombre/text()} {$autor/apellido/text()}</autor>
+Resultado 13:
+<autor><nombre>Serge</nombre><apellido>Abiteboul</apellido></autor>
+<autor><nombre>Peter</nombre><apellido>Buneman</apellido></autor>
+<autor><nombre>Dan</nombre><apellido>Suciu</apellido></autor>
+
+--------------------------------------------------------------------------------
+14. La última línea contendrá una línea que tenga el total de autores.
+--------------------------------------------------------------------------------
+Pregunta 14: La última línea contendrá una línea que tenga el total de autores.
+XQuery 14: count(distinct-values(//autor/apellido))
+Resultado 14:
+4
+```
